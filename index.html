@@ -2501,51 +2501,545 @@
             return adviceMap[dimensionName] || null;
         }
 
-        // 保存为图片
-        function saveAsImage() {
-            // 先更新打印卡片内容
-            updatePrintableCard();
-            
-            // 创建一个全屏容器来显示卡片，这样html2canvas就能正确捕获
-            const fullscreenContainer = document.createElement('div');
-            fullscreenContainer.className = 'fullscreen-card-container';
-            fullscreenContainer.innerHTML = '<div class="fullscreen-card" id="fullscreen-card"></div>';
-            document.body.appendChild(fullscreenContainer);
-            
-            // 将打印卡片的内容复制到全屏容器
-            const printableCard = document.getElementById('printable-card').cloneNode(true);
-            printableCard.style.display = 'block';
-            document.getElementById('fullscreen-card').appendChild(printableCard.querySelector('.result-card'));
-            
-            // 等待DOM更新
-            setTimeout(() => {
-                // 使用html2canvas将卡片转换为图片
-                html2canvas(document.querySelector('.fullscreen-card-container .result-card'), {
-                    scale: 2, // 提高图片质量
-                    useCORS: true,
-                    backgroundColor: '#ffffff',
-                    logging: false,
-                    allowTaint: true,
-                    windowWidth: document.querySelector('.fullscreen-card-container .result-card').scrollWidth,
-                    windowHeight: document.querySelector('.fullscreen-card-container .result-card').scrollHeight
-                }).then(canvas => {
-                    // 创建下载链接
-                    const link = document.createElement('a');
-                    link.download = '恋爱占有欲测试结果.png';
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
-                    
-                    // 移除全屏容器
-                    document.body.removeChild(fullscreenContainer);
-                }).catch(error => {
-                    console.error('保存图片失败:', error);
-                    alert('保存图片失败，请使用打印功能保存为PDF。');
-                    
-                    // 移除全屏容器
-                    document.body.removeChild(fullscreenContainer);
-                });
-            }, 500);
+   // 保存为图片 - 简化可靠的方案
+async function saveAsImage() {
+    try {
+        // 显示加载提示
+        showLoading("正在生成精美图片...");
+        
+        // 等待一下确保DOM完全加载
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        // 计算总分和分类
+        let totalScore = 0;
+        for (let dimension in testState.dimensionScores) {
+            totalScore += testState.dimensionScores[dimension];
         }
+        
+        // 确定类别和总体评估描述
+        let category, summary;
+        if (totalScore < 40) {
+            category = "低占有欲";
+            summary = "您在恋爱关系中表现出较低的占有欲，倾向于给予伴侣较大的自由和空间。这种模式有助于关系保持轻松氛围，但需要注意是否可能让伴侣感到被忽视。";
+        } else if (totalScore < 80) {
+            category = "中度占有欲";
+            summary = "您在恋爱关系中表现出适度的占有欲，这属于正常范围。您渴望亲密连接，但也能给予伴侣一定的个人空间，这种平衡有助于关系健康发展。";
+        } else {
+            category = "高占有欲";
+            summary = "您在恋爱关系中表现出较高的占有欲，可能对伴侣的个人空间和自由限制较多。这可能导致关系紧张，需要适当调整以建立更健康的互动模式。";
+        }
+        
+        // 获取建议列表
+        const adviceItems = getAdviceItemsForImage(totalScore, category);
+        
+        // 获取各维度分数
+        const dimensions = [
+            { name: "情感独占度", score: testState.dimensionScores["情感独占度"] || 0 },
+            { name: "社交监控度", score: testState.dimensionScores["社交监控度"] || 0 },
+            { name: "决策干涉度", score: testState.dimensionScores["决策干涉度"] || 0 },
+            { name: "时间与空间支配度", score: testState.dimensionScores["时间与空间支配度"] || 0 },
+            { name: "焦虑与猜疑倾向", score: testState.dimensionScores["焦虑与猜疑倾向"] || 0 },
+            { name: "所有权宣示度", score: testState.dimensionScores["所有权宣示度"] || 0 }
+        ];
+        
+        // 创建图片模板
+        const templateHtml = createSimpleTemplate(totalScore, category, summary, dimensions, adviceItems);
+        
+        // 创建临时容器来渲染模板
+        const tempContainer = document.createElement('div');
+        tempContainer.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 1080px;
+            height: auto;
+            padding: 40px;
+            background: white;
+            z-index: 9999;
+            visibility: hidden;
+        `;
+        tempContainer.innerHTML = templateHtml;
+        document.body.appendChild(tempContainer);
+        
+        // 等待DOM更新
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // 获取模板的实际高度
+        const templateHeight = tempContainer.scrollHeight;
+        
+        // 重新设置容器高度
+        tempContainer.style.height = `${templateHeight}px`;
+        tempContainer.style.visibility = 'visible';
+        
+        // 等待一下确保渲染完成
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        // 使用html2canvas截图
+        const canvas = await html2canvas(tempContainer, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: '#ffffff',
+            logging: false,
+            allowTaint: true,
+            width: 1080,
+            height: templateHeight + 100, // 额外增加一些高度确保完整
+            windowWidth: 1080,
+            windowHeight: templateHeight + 100
+        });
+        
+        // 创建下载链接
+        const link = document.createElement('a');
+        const timestamp = new Date().toISOString().slice(0, 10);
+        link.download = `恋爱占有欲测试报告_${timestamp}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        
+        // 清理
+        document.body.removeChild(tempContainer);
+        hideLoading();
+        
+        // 显示成功提示
+        showMessage("图片已保存！建议分享到社交媒体或保存为手机壁纸", "success");
+        
+    } catch (error) {
+        console.error('保存图片失败:', error);
+        hideLoading();
+        showMessage("保存失败，请重试", "error");
+    }
+}
+
+// 创建简单的HTML模板
+function createSimpleTemplate(totalScore, category, summary, dimensions, adviceItems) {
+    return `
+        <div style="
+            width: 1000px;
+            background: white;
+            font-family: 'Microsoft YaHei', sans-serif;
+            padding: 40px;
+            box-sizing: border-box;
+        ">
+            <!-- 顶部装饰 -->
+            <div style="
+                height: 6px;
+                background: linear-gradient(90deg, #ff6b8b, #ff8e9e, #7c4dff);
+                margin-bottom: 40px;
+                border-radius: 3px;
+            "></div>
+            
+            <!-- 标题 -->
+            <div style="text-align: center; margin-bottom: 50px;">
+                <h1 style="
+                    font-size: 52px;
+                    color: #ff6b8b;
+                    margin: 0 0 15px 0;
+                    font-weight: bold;
+                ">
+                    恋爱占有欲指数测试报告
+                </h1>
+                <p style="
+                    font-size: 28px;
+                    color: #7c4dff;
+                    margin: 0;
+                ">
+                    科学评估 · 专业建议
+                </p>
+            </div>
+            
+            <!-- 分数展示 -->
+            <div style="
+                text-align: center;
+                margin: 0 auto 60px;
+                padding: 40px 0;
+                background: linear-gradient(135deg, rgba(255,107,139,0.05), rgba(124,77,255,0.05));
+                border-radius: 30px;
+                width: 90%;
+            ">
+                <div style="
+                    font-size: 140px;
+                    color: #ff6b8b;
+                    font-weight: 800;
+                    line-height: 1;
+                    margin-bottom: 15px;
+                ">
+                    ${totalScore}
+                </div>
+                <div style="
+                    font-size: 36px;
+                    color: #999;
+                    margin-bottom: 25px;
+                ">
+                    总分 / 108
+                </div>
+                <div style="
+                    display: inline-block;
+                    font-size: 48px;
+                    color: #7c4dff;
+                    font-weight: bold;
+                    background: white;
+                    padding: 20px 50px;
+                    border-radius: 40px;
+                    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+                ">
+                    ${category}
+                </div>
+            </div>
+            
+            <!-- 分隔线 -->
+            <div style="
+                height: 2px;
+                background: #f0f0f0;
+                margin: 0 auto 40px;
+                width: 80%;
+            "></div>
+            
+            <!-- 总体评估 -->
+            <div style="margin-bottom: 60px;">
+                <h2 style="
+                    font-size: 44px;
+                    color: #ff6b8b;
+                    margin: 0 0 25px 0;
+                    font-weight: bold;
+                    padding-left: 20px;
+                    border-left: 5px solid #ff6b8b;
+                ">
+                    总体评估
+                </h2>
+                <div style="
+                    background: #f9f9f9;
+                    padding: 30px;
+                    border-radius: 20px;
+                    font-size: 34px;
+                    line-height: 1.6;
+                    color: #333;
+                    text-align: justify;
+                ">
+                    ${summary}
+                </div>
+            </div>
+            
+            <!-- 各维度得分 -->
+            <div style="margin-bottom: 60px;">
+                <h2 style="
+                    font-size: 44px;
+                    color: #7c4dff;
+                    margin: 0 0 30px 0;
+                    font-weight: bold;
+                    text-align: center;
+                ">
+                    各维度得分
+                </h2>
+                
+                <!-- 第一行：两个维度 -->
+                <div style="display: flex; justify-content: space-between; margin-bottom: 35px;">
+                    ${dimensions.slice(0, 2).map(dim => `
+                        <div style="
+                            width: 48%;
+                            background: ${dim.name === '情感独占度' ? '#fff5f7' : '#f7f9fe'};
+                            padding: 30px 20px;
+                            border-radius: 20px;
+                            text-align: center;
+                            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                        ">
+                            <div style="
+                                font-size: 36px;
+                                color: #333;
+                                margin-bottom: 25px;
+                                font-weight: 600;
+                                min-height: 45px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                            ">
+                                ${dim.name}
+                            </div>
+                            <div style="
+                                font-size: 48px;
+                                color: #ff6b8b;
+                                font-weight: bold;
+                            ">
+                                ${dim.score}分
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <!-- 第二行：两个维度 -->
+                <div style="display: flex; justify-content: space-between; margin-bottom: 35px;">
+                    ${dimensions.slice(2, 4).map(dim => `
+                        <div style="
+                            width: 48%;
+                            background: ${dim.name === '决策干涉度' ? '#fff5f7' : '#f7f9fe'};
+                            padding: 30px 20px;
+                            border-radius: 20px;
+                            text-align: center;
+                            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                        ">
+                            <div style="
+                                font-size: 36px;
+                                color: #333;
+                                margin-bottom: 25px;
+                                font-weight: 600;
+                                min-height: 45px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                            ">
+                                ${dim.name}
+                            </div>
+                            <div style="
+                                font-size: 48px;
+                                color: #ff6b8b;
+                                font-weight: bold;
+                            ">
+                                ${dim.score}分
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <!-- 第三行：两个维度 -->
+                <div style="display: flex; justify-content: space-between;">
+                    ${dimensions.slice(4, 6).map(dim => `
+                        <div style="
+                            width: 48%;
+                            background: ${dim.name === '焦虑与猜疑倾向' ? '#fff5f7' : '#f7f9fe'};
+                            padding: 30px 20px;
+                            border-radius: 20px;
+                            text-align: center;
+                            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                        ">
+                            <div style="
+                                font-size: 36px;
+                                color: #333;
+                                margin-bottom: 25px;
+                                font-weight: 600;
+                                min-height: 45px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                            ">
+                                ${dim.name}
+                            </div>
+                            <div style="
+                                font-size: 48px;
+                                color: #ff6b8b;
+                                font-weight: bold;
+                            ">
+                                ${dim.score}分
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            
+            <!-- 分隔线 -->
+            <div style="
+                height: 2px;
+                background: #f0f0f0;
+                margin: 0 auto 40px;
+                width: 80%;
+            "></div>
+            
+            <!-- 关键建议 -->
+            <div style="margin-bottom: 60px;">
+                <h2 style="
+                    font-size: 44px;
+                    color: #ff6b8b;
+                    margin: 0 0 30px 0;
+                    font-weight: bold;
+                    padding-left: 20px;
+                    border-left: 5px solid #ff6b8b;
+                ">
+                    关键建议
+                </h2>
+                <div style="
+                    background: #f0f7ff;
+                    padding: 40px 35px;
+                    border-radius: 20px;
+                ">
+                    <ul style="
+                        list-style: none;
+                        padding: 0;
+                        margin: 0;
+                    ">
+                        ${adviceItems.map((advice, index) => `
+                            <li style="
+                                font-size: 34px;
+                                line-height: 1.6;
+                                color: #333;
+                                margin-bottom: 25px;
+                                padding-left: 50px;
+                                position: relative;
+                                min-height: 40px;
+                            ">
+                                <span style="
+                                    position: absolute;
+                                    left: 0;
+                                    top: 0;
+                                    width: 36px;
+                                    height: 36px;
+                                    background: #7c4dff;
+                                    color: white;
+                                    border-radius: 50%;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    font-size: 22px;
+                                    font-weight: bold;
+                                ">
+                                    ${index + 1}
+                                </span>
+                                ${advice}
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 分隔线 -->
+            <div style="
+                height: 2px;
+                background: #f0f0f0;
+                margin: 0 auto 40px;
+                width: 80%;
+            "></div>
+            
+            <!-- 底部文字 -->
+            <div style="text-align: center; padding: 30px 0;">
+                <p style="
+                    font-size: 42px;
+                    color: #7c4dff;
+                    font-weight: bold;
+                    margin: 0 0 15px 0;
+                    line-height: 1.4;
+                ">
+                    发现更好的自己，成就更美的爱情
+                </p>
+                <p style="
+                    font-size: 26px;
+                    color: #999;
+                    margin: 0;
+                ">
+                    恋爱关系研究中心 © 2023
+                </p>
+            </div>
+        </div>
+    `;
+}
+
+// 获取建议列表（用于图片生成）
+function getAdviceItemsForImage(totalScore, category) {
+    if (category === "低占有欲") {
+        return [
+            "适当表达您的需求和期望，帮助伴侣更好地理解您",
+            "偶尔表达对伴侣的关注和在意，增强亲密感",
+            "创造一些属于两人的特别时刻，增强关系专属感",
+            "与伴侣讨论各自对独立空间和亲密连接的需求"
+        ];
+    } else if (category === "中度占有欲") {
+        return [
+            "继续保持这种健康的平衡状态",
+            "定期与伴侣讨论关系中的感受和需求",
+            "发展一些共同的兴趣爱好，增强连接质量",
+            "接受伴侣可能与您有不同的社交需求"
+        ];
+    } else {
+        return [
+            "思考高占有欲背后的原因（安全感、过往经历等）",
+            "从小事开始练习给予伴侣更多空间",
+            "培养个人兴趣和社交圈，减少情感依赖",
+            "有意识地练习信任，避免不必要的监控"
+        ];
+    }
+}
+
+// 显示加载提示
+function showLoading(message) {
+    let loading = document.getElementById('custom-loading');
+    if (!loading) {
+        loading = document.createElement('div');
+        loading.id = 'custom-loading';
+        loading.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            color: white;
+            font-size: 18px;
+        `;
+        loading.innerHTML = `
+            <div style="background: white; padding: 30px; border-radius: 15px; text-align: center;">
+                <div style="width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #ff6b8b; border-radius: 50%; margin: 0 auto 20px; animation: spin 1s linear infinite;"></div>
+                <p style="color: #333; margin: 0; font-size: 16px;">${message}</p>
+            </div>
+            <style>
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            </style>
+        `;
+        document.body.appendChild(loading);
+    }
+}
+
+// 隐藏加载提示
+function hideLoading() {
+    const loading = document.getElementById('custom-loading');
+    if (loading) {
+        document.body.removeChild(loading);
+    }
+}
+
+// 显示消息提示
+function showMessage(message, type = "info") {
+    const messageDiv = document.createElement('div');
+    messageDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#F44336' : '#2196F3'};
+        color: white;
+        padding: 15px 25px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 99999;
+        animation: slideIn 0.3s ease;
+    `;
+    messageDiv.textContent = message;
+    document.body.appendChild(messageDiv);
+    
+    setTimeout(() => {
+        messageDiv.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+            document.body.removeChild(messageDiv);
+        }, 300);
+    }, 3000);
+}
+
+// 添加动画样式
+if (!document.getElementById('message-styles')) {
+    const style = document.createElement('style');
+    style.id = 'message-styles';
+    style.textContent = `
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
+}
 
         // 打印报告
         function printReport() {
