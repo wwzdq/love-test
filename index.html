@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>恋爱占有欲指数测试</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        :root {
+            --primary-color: #ff6b8b;
+            --primary-light: #ffcdd2;
+            --primary-dark: #d81b60;
+            --secondary-color: #7c4dff;
+            --light-color: #f9f7fe;
+            --dark-color: #333344;
+            --gray-light: #f0f0f5;
+            --gray: #a0a0b0;
+            --success-color: #4caf50;
+            --border-radius: 12px;
+            --shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: #fef9ff;
+            color: var(--dark-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(255, 200, 239, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(200, 220, 255, 0.2) 0%, transparent 20%);
+            overflow-x: hidden;
+            word-wrap: break-word;
+            word-break: break-word;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 头部样式 */
+        header {
+            text-align: center;
+            padding: 30px 20px 25px;
+            position: relative;
+            width: 100%;
+        }
+
+        .logo {
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .logo i {
+            font-size: clamp(1.6rem, 4vw, 2.5rem);
+        }
+
+        .tagline {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            color: var(--secondary-color);
+            font-weight: 500;
+            margin-bottom: 25px;
+            padding: 0 10px;
+        }
+
+        /* 卡片样式 */
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: clamp(20px, 4vw, 30px);
+            margin-bottom: 20px;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 107, 139, 0.1);
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .card-title i {
+            color: var(--secondary-color);
+        }
+
+        /* 按钮样式 */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: clamp(12px, 3vw, 14px) clamp(20px, 4vw, 28px);
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(255, 107, 139, 0.3);
+            white-space: nowrap;
+            min-width: fit-content;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 107, 139, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            box-shadow: 0 4px 12px rgba(124, 77, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background-color: #6a3bff;
+            box-shadow: 0 6px 16px rgba(124, 77, 255, 0.4);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(255, 107, 139, 0.1);
+            box-shadow: none;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 25px;
+            justify-content: center;
+        }
+
+        /* 首页样式 */
+        .intro-section {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        @media (min-width: 768px) {
+            .intro-section {
+                grid-template-columns: 1fr 1fr;
+                gap: 25px;
+            }
+        }
+
+        .feature-list {
+            list-style-type: none;
+            margin: 15px 0;
+        }
+
+        .feature-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+
+        .feature-list li i {
+            color: var(--success-color);
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+        }
+
+        .test-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        @media (min-width: 768px) {
+            .test-options {
+                grid-template-columns: 1fr 1fr;
+                gap: 25px;
+            }
+        }
+
+        .test-option {
+            text-align: center;
+            padding: clamp(25px, 4vw, 35px) clamp(20px, 3vw, 25px);
+            border-radius: var(--border-radius);
+            background-color: white;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            border: 2px solid transparent;
+            width: 100%;
+        }
+
+        .test-option:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+        }
+
+        .test-option i {
+            font-size: clamp(2.5rem, 6vw, 3rem);
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .test-option h3 {
+            font-size: clamp(1.3rem, 3vw, 1.5rem);
+            margin-bottom: 12px;
+            color: var(--dark-color);
+        }
+
+        .test-option p {
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            margin-bottom: 8px;
+        }
+
+        /* 测试页面样式 */
+        .test-header {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        @media (min-width: 768px) {
+            .test-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .progress-container {
+            background-color: var(--gray-light);
+            height: 8px;
+            border-radius: 4px;
+            margin: 20px 0 25px;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .question-counter {
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            color: var(--gray);
+            font-weight: 600;
+        }
+
+        .question-card {
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: clamp(1.1rem, 2.8vw, 1.2rem);
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            color: var(--dark-color);
+            word-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .options-container {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: clamp(14px, 3vw, 16px) clamp(16px, 3vw, 20px);
+            background-color: var(--light-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            width: 100%;
+        }
+
+        .option:hover {
+            background-color: #f5f2ff;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            background-color: rgba(255, 107, 139, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .option input {
+            margin-right: 12px;
+            transform: scale(1.1);
+            min-width: 18px;
+        }
+
+        .option label {
+            cursor: pointer;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            flex-grow: 1;
+            word-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        @media (min-width: 768px) {
+            .navigation-buttons {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+
+        /* 结果页面样式 */
+        .result-header {
+            text-align: center;
+            padding-bottom: 25px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .result-score {
+            font-size: clamp(3rem, 8vw, 4rem);
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 15px 0;
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+        }
+
+        .result-score span {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            color: var(--gray);
+            margin-left: 5px;
+        }
+
+        .result-category {
+            font-size: clamp(1.3rem, 3.5vw, 1.5rem);
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .result-description {
+            font-size: clamp(1rem, 2.5vw, 1.1rem);
+            line-height: 1.7;
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+        }
+
+        .dimension-results {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        @media (min-width: 768px) {
+            .dimension-results {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 20px;
+            }
+        }
+
+        .dimension-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .dimension-title {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark-color);
+        }
+
+        .dimension-score {
+            font-size: clamp(1.3rem, 3vw, 1.5rem);
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .dimension-bar {
+            height: 8px;
+            background-color: var(--gray-light);
+            border-radius: 4px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .dimension-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .action-guide {
+            background-color: #f0f7ff;
+            border-left: 4px solid var(--secondary-color);
+            padding: clamp(20px, 3vw, 25px);
+            border-radius: var(--border-radius);
+            margin-top: 25px;
+        }
+
+        .action-guide h3 {
+            color: var(--secondary-color);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+        }
+
+        .action-list {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .action-list li {
+            margin-bottom: 8px;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+        }
+
+        .result-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 25px 20px;
+            color: var(--gray);
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            margin-top: 40px;
+            border-top: 1px solid var(--gray-light);
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+
+            .logo {
+                font-size: 1.8rem;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            .navigation-buttons .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 360px) {
+            html {
+                font-size: 14px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+
+        .no-wrap {
+            white-space: nowrap;
+        }
+
+        .text-ellipsis {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* 自动跳转提示 */
+        .auto-jump-notice {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--gray);
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 首页 -->
+        <div id="home-page" class="page active">
+            <header>
+                <div class="logo">
+                    <i class="fas fa-heart"></i>
+                    恋爱占有欲指数测试
+                </div>
+                <p class="tagline">科学评估 • 深度洞察 • 关系成长</p>
+            </header>
+
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-flask"></i> 科学依据与测试说明</h2>
+                <p>本测试基于亲密关系心理学理论，结合依恋理论、边界感知和关系健康度研究构建。通过评估您在6个核心维度的表现，科学分析您的恋爱占有欲水平，并提供个性化改进建议。</p>
+
+                <div class="intro-section">
+                    <div>
+                        <h3><i class="fas fa-bullseye"></i> 测试目标</h3>
+                        <p>帮助您了解自己在恋爱关系中的占有欲倾向，识别可能影响关系健康的模式，并提供科学可行的改善建议。</p>
+
+                        <h3><i class="fas fa-list-check"></i> 测试维度</h3>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check-circle"></i> 情感独占度</li>
+                            <li><i class="fas fa-check-circle"></i> 社交监控度</li>
+                            <li><i class="fas fa-check-circle"></i> 决策干涉度</li>
+                            <li><i class="fas fa-check-circle"></i> 时间与空间支配度</li>
+                            <li><i class="fas fa-check-circle"></i> 焦虑与猜疑倾向</li>
+                            <li><i class="fas fa-check-circle"></i> 所有权宣示度</li>
+                        </ul>
+                    </div>
+
+                    <!-- 使用指南已被删除 -->
+                </div>
+            </div>
+
+            <div class="test-options">
+                <div class="test-option" onclick="startTest('self')">
+                    <i class="fas fa-user-edit"></i>
+                    <h3>自我评估</h3>
+                    <p>了解自己在恋爱关系中的占有欲倾向，发现潜在的关系模式。</p>
+                    <p><strong>36题 | 约10分钟</strong></p>
+                </div>
+
+                <div class="test-option" onclick="startTest('partner')">
+                    <i class="fas fa-users"></i>
+                    <h3>为恋人评估</h3>
+                    <p>评估恋人的占有欲表现，了解TA的关系模式，促进双方理解。</p>
+                    <p><strong>36题 | 约10分钟</strong></p>
+                </div>
+            </div>
+
+            <footer class="no-print">
+                <p>© 2023 恋爱关系研究中心 | 本测试结果为参考建议，不能替代专业心理咨询</p>
+            </footer>
+        </div>
+
+        <!-- 测试页面 -->
+        <div id="test-page" class="page">
+            <header class="no-print">
+                <div class="logo">
+                    <i class="fas fa-heart"></i>
+                    恋爱占有欲指数测试
+                </div>
+                <p class="tagline" id="test-type-indicator">自我评估测试</p>
+            </header>
+
+            <div class="test-header">
+                <h2 id="current-dimension">情感独占度</h2>
+                <div class="question-counter">
+                    <span id="current-question">1</span> / <span id="total-questions">36</span>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+
+            <div class="card question-card">
+                <div class="question-text" id="question-text">
+                    你是否希望自己是伴侣最亲密、最重要的心事倾诉对象，甚至优于其挚友或家人？
+                </div>
+
+                <div class="options-container" id="options-container">
+                    <!-- 选项将通过JavaScript动态生成 -->
+                </div>
+
+                <div class="navigation-buttons">
+                    <button class="btn btn-outline" id="prev-btn" onclick="prevQuestion()">
+                        <i class="fas fa-arrow-left"></i> 上一题
+                    </button>
+                    <button class="btn btn-secondary" id="submit-btn" onclick="submitTest()" style="display: none;">
+                        <i class="fas fa-chart-bar"></i> 查看结果
+                    </button>
+                </div>
+
+                <div id="auto-jump-notice" class="auto-jump-notice" style="display: none;">
+                    <i class="fas fa-sync-alt"></i> 作答后自动跳转下一题
+                </div>
+            </div>
+
+            <div class="no-print" style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-outline" onclick="goHome()">
+                    <i class="fas fa-home"></i> 返回首页
+                </button>
+            </div>
+        </div>
+
+        <!-- 结果页面 -->
+        <div id="result-page" class="page">
+            <header class="no-print">
+                <div class="logo">
+                    <i class="fas fa-heart"></i>
+                    恋爱占有欲指数测试
+                </div>
+                <p class="tagline">您的个性化测试报告</p>
+            </header>
+
+            <div class="card">
+                <div class="result-header">
+                    <h2 class="card-title"><i class="fas fa-chart-pie"></i> 测试结果分析</h2>
+                    <div class="result-score" id="total-score">0</div>
+                    <div class="result-category" id="result-category">待评估</div>
+                    <p id="result-summary">正在生成您的测试结果...</p>
+                </div>
+
+                <div id="dimension-results-container">
+                    <!-- 各维度结果将通过JavaScript动态生成 -->
+                </div>
+
+                <div class="action-guide">
+                    <h3><i class="fas fa-road"></i> 行动指南与恋爱建议</h3>
+                    <div id="action-guide-content">
+                        <!-- 行动指南内容将通过JavaScript动态生成 -->
+                    </div>
+
+                    <div class="result-actions no-print">
+                        <button class="btn btn-outline" onclick="goHome()">
+                            <i class="fas fa-redo"></i> 重新测试
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="no-print">
+                <p>© 2023 恋爱关系研究中心 | 本测试结果为参考建议，不能替代专业心理咨询</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // 完整自测题库（36题）
+        const selfTestQuestions = [
+            // 维度A：情感独占度 (6题)
+            {
+                dimension: "情感独占度",
+                question: "你是否希望自己是伴侣最亲密、最重要的心事倾诉对象，甚至优于其挚友或家人？",
+                options: [
+                    { text: "完全不希望", score: 0 },
+                    { text: "有点希望", score: 1 },
+                    { text: "比较希望", score: 2 },
+                    { text: "非常希望", score: 3 }
+                ]
+            },
+            {
+                dimension: "情感独占度",
+                question: "如果伴侣与他人（非家人）建立了深厚的柏拉图式情感联结，你会感到不适吗？",
+                options: [
+                    { text: "完全不会", score: 0 },
+                    { text: "轻微不适", score: 1 },
+                    { text: "比较不适", score: 2 },
+                    { text: "非常不适", score: 3 }
+                ]
+            },
+            {
+                dimension: "情感独占度",
+                question: "你是否认为伴侣的某些深层情感体验（如巨大的喜悦或悲伤）应该只与你分享？",
+                options: [
+                    { text: "完全不同意", score: 0 },
+                    { text: "不太同意", score: 1 },
+                    { text: "比较同意", score: 2 },
+                    { text: "非常同意", score: 3 }
+                ]
+            },
+            {
+                dimension: "情感独占度",
+                question: "当伴侣赞美其他异性的内在品质（如善良、聪明）时，你的感受是？",
+                options: [
+                    { text: "为他/她的善于发现而高兴", score: 0 },
+                    { text: "无明显感受", score: 1 },
+                    { text: "有点不是滋味", score: 2 },
+                    { text: "感到不快或威胁", score: 3 }
+                ]
+            },
+            {
+                dimension: "情感独占度",
+                question: "你介意伴侣在情感上非常信赖某位异性朋友吗？",
+                options: [
+                    { text: "完全不介意", score: 0 },
+                    { text: "不太介意", score: 1 },
+                    { text: "比较介意", score: 2 },
+                    { text: "非常介意", score: 3 }
+                ]
+            },
+            {
+                dimension: "情感独占度",
+                question: "你是否认为'真爱'意味着成为彼此情感世界的绝对中心？",
+                options: [
+                    { text: "完全不同意", score: 0 },
+                    { text: "不太同意", score: 1 },
+                    { text: "比较同意", score: 2 },
+                    { text: "非常同意", score: 3 }
+                ]
+            },
+            // 维度B：社交监控度 (6题)
+            {
+                dimension: "社交监控度",
+                question: "你会主动、频繁地查看伴侣的社交媒体动态、点赞或评论列表吗？",
+                options: [
+                    { text: "从不", score: 0 },
+                    { text: "偶尔", score: 1 },
+                    { text: "经常", score: 2 },
+                    { text: "几乎总是", score: 3 }
+                ]
+            },
+            {
+                dimension: "社交监控度",
+                question: "你是否希望知晓伴侣每一次聚会、外出的人员细节（尤其是异性成员）？",
+                options: [
+                    { text: "完全不想", score: 0 },
+                    { text: "对方主动说就好", score: 1 },
+                    { text: "会主动询问", score: 2 },
+                    { text: "认为必须提前报备", score: 3 }
+                ]
+            },
+            {
+                dimension: "社交监控度",
+                question: "伴侣没有及时回复信息或电话时，你的第一反应更接近？",
+                options: [
+                    { text: "他/她可能在忙", score: 0 },
+                    { text: "稍后再说", score: 1 },
+                    { text: "有点担心或好奇", score: 2 },
+                    { text: "怀疑他/她在做什么不想让我知道的事", score: 3 }
+                ]
+            },
+            {
+                dimension: "社交监控度",
+                question: "你会通过共同朋友或间接方式了解伴侣的社交情况吗？",
+                options: [
+                    { text: "从不", score: 0 },
+                    { text: "极少", score: 1 },
+                    { text: "有时会", score: 2 },
+                    { text: "经常会", score: 3 }
+                ]
+            },
+            {
+                dimension: "社交监控度",
+                question: "你认为查看伴侣手机通讯记录是正常的吗？",
+                options: [
+                    { text: "完全不正常，侵犯隐私", score: 0 },
+                    { text: "特殊情况（如信任危机）下可以", score: 1 },
+                    { text: "如果关系足够亲密，可以接受", score: 2 },
+                    { text: "很正常，相爱就不该有秘密", score: 3 }
+                ]
+            },
+            {
+                dimension: "社交监控度",
+                question: "伴侣参加有较多异性在场的活动（如公司团建、同学会），你的态度是？",
+                options: [
+                    { text: "完全支持", score: 0 },
+                    { text: "理解，但希望他/她玩得开心", score: 1 },
+                    { text: "有点担心，会叮嘱几句", score: 2 },
+                    { text: "不太乐意，可能会表达不满", score: 3 }
+                ]
+            },
+            // 维度C：决策干涉度 (6题)
+            {
+                dimension: "决策干涉度",
+                question: "你会对伴侣的日常穿着打扮提出明确意见或要求吗？",
+                options: [
+                    { text: "从不，这是他/她的自由", score: 0 },
+                    { text: "仅在对方询问时给建议", score: 1 },
+                    { text: "会主动表达偏好", score: 2 },
+                    { text: "会明确表示希望或不喜欢他/她某种打扮", score: 3 }
+                ]
+            },
+            {
+                dimension: "决策干涉度",
+                question: "在伴侣的个人消费（如购买较贵物品）决策上，你的角色是？",
+                options: [
+                    { text: "完全是他/她自己的事", score: 0 },
+                    { text: "他/她可能会和我商量", score: 1 },
+                    { text: "他/她应该和我商量", score: 2 },
+                    { text: "必须经过我的同意", score: 3 }
+                ]
+            },
+            {
+                dimension: "决策干涉度",
+                question: "如果伴侣的职业选择可能影响你们相处的时间，你的态度是？",
+                options: [
+                    { text: "全力支持，时间可协调", score: 0 },
+                    { text: "支持，但会表达对时间的担忧", score: 1 },
+                    { text: "慎重考虑，需要他/她做出一些保证", score: 2 },
+                    { text: "倾向于反对，希望他/她优先考虑关系", score: 3 }
+                ]
+            },
+            {
+                dimension: "决策干涉度",
+                question: "你会因为自己的喜好，建议或要求伴侣培养/放弃某些兴趣爱好吗？",
+                options: [
+                    { text: "从不", score: 0 },
+                    { text: "极少，除非影响健康或关系", score: 1 },
+                    { text: "有时会", score: 2 },
+                    { text: "经常，觉得应该共同成长", score: 3 }
+                ]
+            },
+            {
+                dimension: "决策干涉度",
+                question: "当伴侣与家人发生矛盾时，你会？",
+                options: [
+                    { text: "倾听，但尊重他/她自己的处理方式", score: 0 },
+                    { text: "提供建议，由他/她决定", score: 1 },
+                    { text: "明确表达我的立场，并希望他/她采纳", score: 2 },
+                    { text: "认为他/她应该按照我认为对的方式处理", score: 3 }
+                ]
+            },
+            {
+                dimension: "决策干涉度",
+                question: "你认为在重大人生决策上（如置业、迁徙），伴侣应该以双方关系为最优先考量吗？",
+                options: [
+                    { text: "不应该，需综合权衡", score: 0 },
+                    { text: "是重要考量，但非唯一", score: 1 },
+                    { text: "应该是首要考量", score: 2 },
+                    { text: "必须是决定性因素", score: 3 }
+                ]
+            },
+            // 维度D：时间与空间支配度 (6题)
+            {
+                dimension: "时间与空间支配度",
+                question: "你希望伴侣在空闲时间优先安排与你相处吗？",
+                options: [
+                    { text: "不，各自安排就好", score: 0 },
+                    { text: "希望有一部分专属我们的时间", score: 1 },
+                    { text: "希望大部分空闲时间能一起度过", score: 2 },
+                    { text: "希望他/她的空闲时间都以我为中心", score: 3 }
+                ]
+            },
+            {
+                dimension: "时间与空间支配度",
+                question: "伴侣需要定期与朋友进行'无伴侣参与'的聚会，你的看法是？",
+                options: [
+                    { text: "非常必要，支持", score: 0 },
+                    { text: "可以理解，适度就好", score: 1 },
+                    { text: "不太必要，尽量一起活动", score: 2 },
+                    { text: "没必要，我们应该是最亲密的伙伴", score: 3 }
+                ]
+            },
+            {
+                dimension: "时间与空间支配度",
+                question: "当你想联系或见到伴侣时，你期望他/她的回应速度是？",
+                options: [
+                    { text: "有空时回复/见面即可", score: 0 },
+                    { text: "尽快，但允许有延迟", score: 1 },
+                    { text: "应该立即回应，除非有紧急情况", score: 2 },
+                    { text: "必须立即回应，否则我会焦虑", score: 3 }
+                ]
+            },
+            {
+                dimension: "时间与空间支配度",
+                question: "你对伴侣保留独立的个人空间（如不上锁的日记、独处时光）的态度是？",
+                options: [
+                    { text: "完全尊重且认为必要", score: 0 },
+                    { text: "理解，但好奇边界在哪里", score: 1 },
+                    { text: "可以有一点，但不宜过多", score: 2 },
+                    { text: "亲密关系中不应存在对我保密的空间", score: 3 }
+                ]
+            },
+            {
+                dimension: "时间与空间支配度",
+                question: "如果伴侣因个人事务（如工作、学习、兴趣）连续几天很忙，你的感受是？",
+                options: [
+                    { text: "完全支持，照顾好自己", score: 0 },
+                    { text: "有点想念，但能接受", score: 1 },
+                    { text: "感到被冷落，需要他/她更多关注", score: 2 },
+                    { text: "无法接受，觉得他/她不再重视我", score: 3 }
+                ]
+            },
+            {
+                dimension: "时间与空间支配度",
+                question: "你倾向于如何安排双方的共同假期？",
+                options: [
+                    { text: "各自计划，可能有部分重合", score: 0 },
+                    { text: "共同商议，平衡双方意愿", score: 1 },
+                    { text: "主要由我提议和规划", score: 2 },
+                    { text: "必须完全按照我的意愿来安排", score: 3 }
+                ]
+            },
+            // 维度E：焦虑与猜疑倾向 (6题)
+            {
+                dimension: "焦虑与猜疑倾向",
+                question: "当伴侣提到一位优秀的异性同事或朋友时，你内心通常？",
+                options: [
+                    { text: "无特别感觉", score: 0 },
+                    { text: "会多问几句他们如何相识", score: 1 },
+                    { text: "隐隐有些比较和不安", score: 2 },
+                    { text: "立刻产生警惕和怀疑", score: 3 }
+                ]
+            },
+            {
+                dimension: "焦虑与猜疑倾向",
+                question: "如果伴侣突然改变某个习惯（如换发型、用新香水），你的第一联想是？",
+                options: [
+                    { text: "他/她想尝试新东西", score: 0 },
+                    { text: "是不是有什么特别场合", score: 1 },
+                    { text: "他/她是不是想吸引别人注意", score: 2 },
+                    { text: "他/她可能有情况了", score: 3 }
+                ]
+            },
+            {
+                dimension: "焦虑与猜疑倾向",
+                question: "关系中出现微小的不确定信号（如回复变慢），你更容易？",
+                options: [
+                    { text: "归因于外部客观因素", score: 0 },
+                    { text: "稍作观察，不多想", score: 1 },
+                    { text: "反复琢磨，内心戏很多", score: 2 },
+                    { text: "直接焦虑，并可能质问对方", score: 3 }
+                ]
+            },
+            {
+                dimension: "焦虑与猜疑倾向",
+                question: "你需要伴侣频繁表达爱意和承诺来获得安全感吗？",
+                options: [
+                    { text: "不需要，行动更重要", score: 0 },
+                    { text: "偶尔需要", score: 1 },
+                    { text: "比较需要", score: 2 },
+                    { text: "非常需要，否则会不安", score: 3 }
+                ]
+            },
+            {
+                dimension: "焦虑与猜疑倾向",
+                question: "你是否曾因想象伴侣可能不忠或离开而感到强烈痛苦？",
+                options: [
+                    { text: "从未", score: 0 },
+                    { text: "极少", score: 1 },
+                    { text: "有时", score: 2 },
+                    { text: "经常", score: 3 }
+                ]
+            },
+            {
+                dimension: "焦虑与猜疑倾向",
+                question: "当伴侣与你理想中的互动模式有偏差时，你容易认为是他/她感情变淡了吗？",
+                options: [
+                    { text: "不会，关系有起伏正常", score: 0 },
+                    { text: "偶尔闪过念头", score: 1 },
+                    { text: "比较容易这么想", score: 2 },
+                    { text: "经常如此认为", score: 3 }
+                ]
+            },
+            // 维度F：所有权宣示度 (6题)
+            {
+                dimension: "所有权宣示度",
+                question: "你会在社交平台频繁发布双方合照或关系状态来'宣示主权'吗？",
+                options: [
+                    { text: "从不或极少", score: 0 },
+                    { text: "特殊日子会发", score: 1 },
+                    { text: "经常发，觉得是爱的表达", score: 2 },
+                    { text: "非常频繁，几乎成为一种习惯", score: 3 }
+                ]
+            },
+            {
+                dimension: "所有权宣示度",
+                question: "在共同社交场合，你是否会通过亲密举动（如始终牵手、喂食）来明确关系？",
+                options: [
+                    { text: "不会，自然相处", score: 0 },
+                    { text: "偶尔，情之所至", score: 1 },
+                    { text: "经常会，希望别人知道我们很恩爱", score: 2 },
+                    { text: "几乎总是，这是必须的", score: 3 }
+                ]
+            },
+            {
+                dimension: "所有权宣示度",
+                question: "你介意伴侣在公开场合不主动提及或承认你们的恋爱关系吗？",
+                options: [
+                    { text: "完全不介意", score: 0 },
+                    { text: "希望他/她自然提及", score: 1 },
+                    { text: "有点介意，觉得应该主动说明", score: 2 },
+                    { text: "非常介意，感觉像被隐藏", score: 3 }
+                ]
+            },
+            {
+                dimension: "所有权宣示度",
+                question: "你会使用'你是我的'、'我是你的'这类具有归属意味的称呼或表述吗？",
+                options: [
+                    { text: "从不使用", score: 0 },
+                    { text: "极少，开玩笑时可能", score: 1 },
+                    { text: "有时使用，觉得甜蜜", score: 2 },
+                    { text: "经常使用，认为这是爱意的体现", score: 3 }
+                ]
+            },
+            {
+                dimension: "所有权宣示度",
+                question: "如果异性对伴侣表现出兴趣，你会如何反应？",
+                options: [
+                    { text: "相信伴侣能处理", score: 0 },
+                    { text: "提醒伴侣注意，但不过度反应", score: 1 },
+                    { text: "会感到不快，并可能在现场表现出更强的占有姿态", score: 2 },
+                    { text: "会立即介入，明确向对方展示我们的关系", score: 3 }
+                ]
+            },
+            {
+                dimension: "所有权宣示度",
+                question: "你认为要求伴侣将社交媒体头像设置为你们的合照，是合理的要求吗？",
+                options: [
+                    { text: "不合理，完全个人自由", score: 0 },
+                    { text: "可以提议，但不强求", score: 1 },
+                    { text: "是表达忠诚和公开关系的好方式", score: 2 },
+                    { text: "非常合理，这应该是一种承诺", score: 3 }
+                ]
+            }
+        ];
+
+        // 完整他测题库（36题）
+        const partnerTestQuestions = [
+            // 维度A：情感独占度 (6题)
+            {
+                dimension: "情感独占度",
+                question: "你的伴侣是否希望你成为他/她最亲密、最重要的心事倾诉对象，甚至优于其挚友或家人？",
+                options: [
+                    { text: "完全不希望", score: 0 },
+                    { text: "有点希望", score: 1 },
+                    { text: "比较希望", score: 2 },
+                    { text: "非常希望", score: 3 }
+                ]
+            },
+            {
+                dimension: "情感独占度",
+                question: "如果你与他人建立了深厚的柏拉图式情感联结，你的伴侣会感到不适吗？",
+                options: [
+                    { text: "完全不会", score: 0 },
+                    { text: "轻微不适", score: 1 },
+                    { text: "比较不适", score: 2 },
+                    { text: "非常不适", score: 3 }
+                ]
+            },
+            {
+                dimension: "情感独占度",
+                question: "你的伴侣是否认为你的某些深层情感体验应该只与他/她分享？",
+                options: [
+                    { text: "完全不同意", score: 0 },
+                    { text: "不太同意", score: 1 },
+                    { text: "比较同意", score: 2 },
+                    { text: "非常同意", score: 3 }
+                ]
+            },
+            {
+                dimension: "情感独占度",
+                question: "当你赞美其他异性的内在品质时，你的伴侣感受如何？",
+                options: [
+                    { text: "为他/她的善于发现而高兴", score: 0 },
+                    { text: "无明显感受", score: 1 },
+                    { text: "有点不是滋味", score: 2 },
+                    { text: "感到不快或威胁", score: 3 }
+                ]
+            },
+            {
+                dimension: "情感独占度",
+                question: "你的伴侣介意你在情感上非常信赖某位异性朋友吗？",
+                options: [
+                    { text: "完全不介意", score: 0 },
+                    { text: "不太介意", score: 1 },
+                    { text: "比较介意", score: 2 },
+                    { text: "非常介意", score: 3 }
+                ]
+            },
+            {
+                dimension: "情感独占度",
+                question: "你的伴侣是否认为'真爱'意味着成为彼此情感世界的绝对中心？",
+                options: [
+                    { text: "完全不同意", score: 0 },
+                    { text: "不太同意", score: 1 },
+                    { text: "比较同意", score: 2 },
+                    { text: "非常同意", score: 3 }
+                ]
+            },
+            // 维度B：社交监控度 (6题)
+            {
+                dimension: "社交监控度",
+                question: "你的伴侣会主动、频繁地查看你的社交媒体动态吗？",
+                options: [
+                    { text: "从不", score: 0 },
+                    { text: "偶尔", score: 1 },
+                    { text: "经常", score: 2 },
+                    { text: "几乎总是", score: 3 }
+                ]
+            },
+            {
+                dimension: "社交监控度",
+                question: "你的伴侣是否希望知晓你每一次聚会、外出的人员细节？",
+                options: [
+                    { text: "完全不想", score: 0 },
+                    { text: "对方主动说就好", score: 1 },
+                    { text: "会主动询问", score: 2 },
+                    { text: "认为必须提前报备", score: 3 }
+                ]
+            },
+            {
+                dimension: "社交监控度",
+                question: "当你没有及时回复信息时，你的伴侣第一反应更接近？",
+                options: [
+                    { text: "他/她可能在忙", score: 0 },
+                    { text: "稍后再说", score: 1 },
+                    { text: "有点担心或好奇", score: 2 },
+                    { text: "怀疑他/她在做什么不想让我知道的事", score: 3 }
+                ]
+            },
+            {
+                dimension: "社交监控度",
+                question: "你的伴侣会通过共同朋友间接了解你的社交情况吗？",
+                options: [
+                    { text: "从不", score: 0 },
+                    { text: "极少", score: 1 },
+                    { text: "有时会", score: 2 },
+                    { text: "经常会", score: 3 }
+                ]
+            },
+            {
+                dimension: "社交监控度",
+                question: "你的伴侣认为查看对方手机通讯记录是正常的吗？",
+                options: [
+                    { text: "完全不正常，侵犯隐私", score: 0 },
+                    { text: "特殊情况（如信任危机）下可以", score: 1 },
+                    { text: "如果关系足够亲密，可以接受", score: 2 },
+                    { text: "很正常，相爱就不该有秘密", score: 3 }
+                ]
+            },
+            {
+                dimension: "社交监控度",
+                question: "你参加有较多异性在场的活动时，你的伴侣态度如何？",
+                options: [
+                    { text: "完全支持", score: 0 },
+                    { text: "理解，但希望他/她玩得开心", score: 1 },
+                    { text: "有点担心，会叮嘱几句", score: 2 },
+                    { text: "不太乐意，可能会表达不满", score: 3 }
+                ]
+            },
+            // 维度C：决策干涉度 (6题)
+            {
+                dimension: "决策干涉度",
+                question: "你的伴侣会对你的日常穿着打扮提出明确意见或要求吗？",
+                options: [
+                    { text: "从不，这是他/她的自由", score: 0 },
+                    { text: "仅在对方询问时给建议", score: 1 },
+                    { text: "会主动表达偏好", score: 2 },
+                    { text: "会明确表示希望或不喜欢他/她某种打扮", score: 3 }
+                ]
+            },
+            {
+                dimension: "决策干涉度",
+                question: "在你的个人消费决策上，你的伴侣扮演什么角色？",
+                options: [
+                    { text: "完全是他/她自己的事", score: 0 },
+                    { text: "他/她可能会和我商量", score: 1 },
+                    { text: "他/她应该和我商量", score: 2 },
+                    { text: "必须经过我的同意", score: 3 }
+                ]
+            },
+            {
+                dimension: "决策干涉度",
+                question: "如果你的职业选择可能影响相处时间，你的伴侣态度如何？",
+                options: [
+                    { text: "全力支持，时间可协调", score: 0 },
+                    { text: "支持，但会表达对时间的担忧", score: 1 },
+                    { text: "慎重考虑，需要他/她做出一些保证", score: 2 },
+                    { text: "倾向于反对，希望他/她优先考虑关系", score: 3 }
+                ]
+            },
+            {
+                dimension: "决策干涉度",
+                question: "你的伴侣会因其喜好，建议或要求你培养/放弃某些兴趣爱好吗？",
+                options: [
+                    { text: "从不", score: 0 },
+                    { text: "极少，除非影响健康或关系", score: 1 },
+                    { text: "有时会", score: 2 },
+                    { text: "经常，觉得应该共同成长", score: 3 }
+                ]
+            },
+            {
+                dimension: "决策干涉度",
+                question: "当你与家人发生矛盾时，你的伴侣通常会？",
+                options: [
+                    { text: "倾听，但尊重他/她自己的处理方式", score: 0 },
+                    { text: "提供建议，由他/她决定", score: 1 },
+                    { text: "明确表达我的立场，并希望他/她采纳", score: 2 },
+                    { text: "认为他/她应该按照我认为对的方式处理", score: 3 }
+                ]
+            },
+            {
+                dimension: "决策干涉度",
+                question: "你的伴侣认为你在重大人生决策上，应该以双方关系为最优先考量吗？",
+                options: [
+                    { text: "不应该，需综合权衡", score: 0 },
+                    { text: "是重要考量，但非唯一", score: 1 },
+                    { text: "应该是首要考量", score: 2 },
+                    { text: "必须是决定性因素", score: 3 }
+                ]
+            },
+            // 维度D：时间与空间支配度 (6题)
+            {
+                dimension: "时间与空间支配度",
+                question: "你的伴侣希望你优先安排与他/她相处的时间吗？",
+                options: [
+                    { text: "不，各自安排就好", score: 0 },
+                    { text: "希望有一部分专属我们的时间", score: 1 },
+                    { text: "希望大部分空闲时间能一起度过", score: 2 },
+                    { text: "希望他/她的空闲时间都以我为中心", score: 3 }
+                ]
+            },
+            {
+                dimension: "时间与空间支配度",
+                question: "你的伴侣如何看待你定期与朋友进行'无伴侣参与'的聚会？",
+                options: [
+                    { text: "非常必要，支持", score: 0 },
+                    { text: "可以理解，适度就好", score: 1 },
+                    { text: "不太必要，尽量一起活动", score: 2 },
+                    { text: "没必要，我们应该是最亲密的伙伴", score: 3 }
+                ]
+            },
+            {
+                dimension: "时间与空间支配度",
+                question: "当你的伴侣想联系或见到你时，他/她期望的回应速度是？",
+                options: [
+                    { text: "有空时回复/见面即可", score: 0 },
+                    { text: "尽快，但允许有延迟", score: 1 },
+                    { text: "应该立即回应，除非有紧急情况", score: 2 },
+                    { text: "必须立即回应，否则我会焦虑", score: 3 }
+                ]
+            },
+            {
+                dimension: "时间与空间支配度",
+                question: "你的伴侣对你保留独立个人空间的态度是？",
+                options: [
+                    { text: "完全尊重且认为必要", score: 0 },
+                    { text: "理解，但好奇边界在哪里", score: 1 },
+                    { text: "可以有一点，但不宜过多", score: 2 },
+                    { text: "亲密关系中不应存在对我保密的空间", score: 3 }
+                ]
+            },
+            {
+                dimension: "时间与空间支配度",
+                question: "如果你因个人事务连续几天很忙，你的伴侣感受如何？",
+                options: [
+                    { text: "完全支持，照顾好自己", score: 0 },
+                    { text: "有点想念，但能接受", score: 1 },
+                    { text: "感到被冷落，需要他/她更多关注", score: 2 },
+                    { text: "无法接受，觉得他/她不再重视我", score: 3 }
+                ]
+            },
+            {
+                dimension: "时间与空间支配度",
+                question: "你的伴侣倾向于如何安排双方的共同假期？",
+                options: [
+                    { text: "各自计划，可能有部分重合", score: 0 },
+                    { text: "共同商议，平衡双方意愿", score: 1 },
+                    { text: "主要由我提议和规划", score: 2 },
+                    { text: "必须完全按照我的意愿来安排", score: 3 }
+                ]
+            },
+            // 维度E：焦虑与猜疑倾向 (6题)
+            {
+                dimension: "焦虑与猜疑倾向",
+                question: "当你提到一位优秀的异性同事或朋友时，你的伴侣内心通常？",
+                options: [
+                    { text: "无特别感觉", score: 0 },
+                    { text: "会多问几句他们如何相识", score: 1 },
+                    { text: "隐隐有些比较和不安", score: 2 },
+                    { text: "立刻产生警惕和怀疑", score: 3 }
+                ]
+            },
+            {
+                dimension: "焦虑与猜疑倾向",
+                question: "如果你突然改变某个习惯，你的伴侣第一联想是？",
+                options: [
+                    { text: "他/她想尝试新东西", score: 0 },
+                    { text: "是不是有什么特别场合", score: 1 },
+                    { text: "他/她是不是想吸引别人注意", score: 2 },
+                    { text: "他/她可能有情况了", score: 3 }
+                ]
+            },
+            {
+                dimension: "焦虑与猜疑倾向",
+                question: "关系中出现微小不确定信号时，你的伴侣更容易？",
+                options: [
+                    { text: "归因于外部客观因素", score: 0 },
+                    { text: "稍作观察，不多想", score: 1 },
+                    { text: "反复琢磨，内心戏很多", score: 2 },
+                    { text: "直接焦虑，并可能质问对方", score: 3 }
+                ]
+            },
+            {
+                dimension: "焦虑与猜疑倾向",
+                question: "你的伴侣需要你频繁表达爱意和承诺来获得安全感吗？",
+                options: [
+                    { text: "不需要，行动更重要", score: 0 },
+                    { text: "偶尔需要", score: 1 },
+                    { text: "比较需要", score: 2 },
+                    { text: "非常需要，否则会不安", score: 3 }
+                ]
+            },
+            {
+                dimension: "焦虑与猜疑倾向",
+                question: "你的伴侣是否曾因想象你可能不忠或离开而感到痛苦？",
+                options: [
+                    { text: "从未", score: 0 },
+                    { text: "极少", score: 1 },
+                    { text: "有时", score: 2 },
+                    { text: "经常", score: 3 }
+                ]
+            },
+            {
+                dimension: "焦虑与猜疑倾向",
+                question: "当你与伴侣理想中的互动模式有偏差时，他/她容易认为是你感情变淡了吗？",
+                options: [
+                    { text: "不会，关系有起伏正常", score: 0 },
+                    { text: "偶尔闪过念头", score: 1 },
+                    { text: "比较容易这么想", score: 2 },
+                    { text: "经常如此认为", score: 3 }
+                ]
+            },
+            // 维度F：所有权宣示度 (6题)
+            {
+                dimension: "所有权宣示度",
+                question: "你的伴侣会在社交平台频繁发布双方合照来'宣示主权'吗？",
+                options: [
+                    { text: "从不或极少", score: 0 },
+                    { text: "特殊日子会发", score: 1 },
+                    { text: "经常发，觉得是爱的表达", score: 2 },
+                    { text: "非常频繁，几乎成为一种习惯", score: 3 }
+                ]
+            },
+            {
+                dimension: "所有权宣示度",
+                question: "在共同社交场合，你的伴侣是否会通过亲密举动来明确关系？",
+                options: [
+                    { text: "不会，自然相处", score: 0 },
+                    { text: "偶尔，情之所至", score: 1 },
+                    { text: "经常会，希望别人知道我们很恩爱", score: 2 },
+                    { text: "几乎总是，这是必须的", score: 3 }
+                ]
+            },
+            {
+                dimension: "所有权宣示度",
+                question: "你的伴侣介意你在公开场合不主动提及恋爱关系吗？",
+                options: [
+                    { text: "完全不介意", score: 0 },
+                    { text: "希望他/她自然提及", score: 1 },
+                    { text: "有点介意，觉得应该主动说明", score: 2 },
+                    { text: "非常介意，感觉像被隐藏", score: 3 }
+                ]
+            },
+            {
+                dimension: "所有权宣示度",
+                question: "你的伴侣会使用'你是我的'这类具有归属意味的表述吗？",
+                options: [
+                    { text: "从不使用", score: 0 },
+                    { text: "极少，开玩笑时可能", score: 1 },
+                    { text: "有时使用，觉得甜蜜", score: 2 },
+                    { text: "经常使用，认为这是爱意的体现", score: 3 }
+                ]
+            },
+            {
+                dimension: "所有权宣示度",
+                question: "如果有异性对你表现出兴趣，你的伴侣通常会如何反应？",
+                options: [
+                    { text: "相信伴侣能处理", score: 0 },
+                    { text: "提醒伴侣注意，但不过度反应", score: 1 },
+                    { text: "会感到不快，并可能在现场表现出更强的占有姿态", score: 2 },
+                    { text: "会立即介入，明确向对方展示我们的关系", score: 3 }
+                ]
+            },
+            {
+                dimension: "所有权宣示度",
+                question: "你的伴侣认为要求你将社交媒体头像设置为合照是合理的吗？",
+                options: [
+                    { text: "不合理，完全个人自由", score: 0 },
+                    { text: "可以提议，但不强求", score: 1 },
+                    { text: "是表达忠诚和公开关系的好方式", score: 2 },
+                    { text: "非常合理，这应该是一种承诺", score: 3 }
+                ]
+            }
+        ];
+
+        // 维度定义
+        const dimensions = [
+            { id: "A", name: "情感独占度", maxScore: 18, description: "衡量个体在情感层面希望伴侣专属的程度" },
+            { id: "B", name: "社交监控度", maxScore: 18, description: "衡量个体对伴侣社交生活的关注与介入程度" },
+            { id: "C", name: "决策干涉度", maxScore: 18, description: "衡量个体在伴侣个人事务上施加影响的倾向" },
+            { id: "D", name: "时间与空间支配度", maxScore: 18, description: "衡量个体对伴侣个人时间安排的控制与期望" },
+            { id: "E", name: "焦虑与猜疑倾向", maxScore: 18, description: "衡量个体在关系缺乏反馈时产生不安情绪的易感性" },
+            { id: "F", name: "所有权宣示度", maxScore: 18, description: "衡量个体向外界标识伴侣'归属'的表现强度" }
+        ];
+
+        // 维度详细解读
+        const dimensionDetails = {
+            "情感独占度": {
+                low: { range: "0-7分", title: "情感独立型", description: "你视伴侣为重要但非唯一的情感支点，尊重其情感世界的多样性与独立性。你认为健康的爱包含对伴侣其他重要关系的接纳。" },
+                mid: { range: "8-13分", title: "情感依恋型", description: "你渴望与伴侣建立深度情感联结，并希望在彼此心中占据特殊位置。这源于对亲密感的正常需求，但偶尔可能因伴侣与他人的亲近而产生微妙情绪。" },
+                high: { range: "14-18分", title: "情感绝对化型", description: "你倾向于追求情感上的绝对占有和唯一性，可能将伴侣对其他人的情感投入视为对关系的威胁。这背后可能隐藏着对自我价值或关系稳定性的深层不安。" }
+            },
+            "社交监控度": {
+                low: { range: "0-7分", title: "信任尊重型", description: "你给予伴侣高度的社交自由和隐私尊重，相信其判断和忠诚。关系建立在信任而非监控之上。" },
+                mid: { range: "8-13分", title: "适度关注型", description: "你对伴侣的社交圈保持合理兴趣和适度知情，关心其安全与交往质量，但通常不会采取侵入性手段。" },
+                high: { range: "14-18分", title: "高度监控型", description: "你对伴侣的社交活动有强烈的知情和控制欲，可能通过直接或间接手段进行监控。这极易导致对方感到窒息和不被信任，引发关系冲突。" }
+            },
+            "决策干涉度": {
+                low: { range: "0-7分", title: "边界清晰型", description: "你清晰区分'我们的事'和'你的事'，尊重伴侣作为独立个体的自主决策权。你提供支持而非主导。" },
+                mid: { range: "8-13分", title: "参与影响型", description: "你乐于参与伴侣的决策过程，表达自己的观点和偏好，希望两人的生活能协调一致。这是关系融合的自然表现，但需警惕越界。" },
+                high: { range: "14-18分", title: "主导控制型", description: "你倾向于在伴侣的个人事务上施加决定性影响，甚至认为这是爱和关心的体现。这可能导致伴侣感到自我被侵蚀，产生怨恨。" }
+            },
+            "时间与空间支配度": {
+                low: { range: "0-7分", title: "空间给予型", description: "你重视并维护伴侣的独立性，认为适度的个人时间和空间有助于关系保鲜。你本身也能享受独处。" },
+                mid: { range: "8-13分", title: "适度粘合型", description: "你享受与伴侣共度的时光，并希望占据其生活中相当比重。你能在'一起'和'分开'之间取得基本平衡，但有时可能对伴侣的独立活动感到些许失落。" },
+                high: { range: "14-18分", title: "时空捆绑型", description: "你期望与伴侣在时间和空间上高度融合，对分离或对方的独立活动感到强烈不安或不满。这可能导致关系粘腻，双方都失去喘息空间。" }
+            },
+            "焦虑与猜疑倾向": {
+                low: { range: "0-7分", title: "安全平和型", description: "你对关系有较强的内在安全感，不易因小事波动。倾向于积极归因，情绪稳定。" },
+                mid: { range: "8-13分", title: "偶发波动型", description: "你多数时间感到安全，但在特定压力情境（如异地、冲突、伴侣行为反常）下容易产生焦虑和猜疑。你的情绪会随关系互动质量起伏。" },
+                high: { range: "14-18分", title: "高频焦虑型", description: "你经常处于对关系不确定性的担忧中，容易将中性甚至积极信号解读为威胁，内心戏丰富。这消耗大量情绪能量，并可能通过反复求证的行为将伴侣推远。" }
+            },
+            "所有权宣示度": {
+                low: { range: "0-7分", title: "低调内敛型", description: "你认为关系是私人事务，无需过度对外展示。感情的真挚体现在日常互动中，而非公开声明。" },
+                mid: { range: "8-13分", title: "情境表达型", description: "你会在感到甜蜜或特定场合自然表达对关系的确认和自豪，将其视为爱的表达之一。但不会将其作为例行任务或控制手段。" },
+                high: { range: "14-18分", title: "高频宣示型", description: "你倾向于频繁、明确地通过言行向外界（尤其是潜在竞争者）标识伴侣的'归属'。这可能源于深刻的不安全感，或对关系符号（如公开状态）的过度看重。" }
+            }
+        };
+
+        // 测试状态
+        let testState = {
+            currentTestType: "self", // "self" 或 "partner"
+            currentQuestionIndex: 0,
+            answers: [],
+            dimensionScores: {
+                "情感独占度": 0,
+                "社交监控度": 0,
+                "决策干涉度": 0,
+                "时间与空间支配度": 0,
+                "焦虑与猜疑倾向": 0,
+                "所有权宣示度": 0
+            },
+            autoJumpTimer: null
+        };
+
+        // 页面切换函数
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            document.getElementById(pageId).classList.add('active');
+
+            if (pageId === 'test-page') {
+                initializeTest();
+            }
+
+            if (pageId === 'result-page') {
+                generateResults();
+            }
+
+            window.scrollTo(0, 0);
+        }
+
+        // 开始测试
+        function startTest(testType) {
+            testState.currentTestType = testType;
+            testState.currentQuestionIndex = 0;
+            testState.answers = [];
+            testState.dimensionScores = {
+                "情感独占度": 0,
+                "社交监控度": 0,
+                "决策干涉度": 0,
+                "时间与空间支配度": 0,
+                "焦虑与猜疑倾向": 0,
+                "所有权宣示度": 0
+            };
+
+            if (testState.autoJumpTimer) {
+                clearTimeout(testState.autoJumpTimer);
+                testState.autoJumpTimer = null;
+            }
+
+            const indicator = document.getElementById('test-type-indicator');
+            indicator.textContent = testType === 'self' ? '自我评估测试' : '为恋人评估测试';
+
+            showPage('test-page');
+        }
+
+        // 初始化测试
+        function initializeTest() {
+            const questions = testState.currentTestType === 'self' ? selfTestQuestions : partnerTestQuestions;
+            document.getElementById('total-questions').textContent = questions.length;
+            displayQuestion();
+        }
+
+        // 显示当前问题
+        function displayQuestion() {
+            const questions = testState.currentTestType === 'self' ? selfTestQuestions : partnerTestQuestions;
+            const question = questions[testState.currentQuestionIndex];
+
+            if (testState.autoJumpTimer) {
+                clearTimeout(testState.autoJumpTimer);
+                testState.autoJumpTimer = null;
+            }
+
+            document.getElementById('auto-jump-notice').style.display = 'none';
+
+            document.getElementById('current-question').textContent = testState.currentQuestionIndex + 1;
+
+            const progress = ((testState.currentQuestionIndex + 1) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+
+            document.getElementById('current-dimension').textContent = question.dimension;
+            document.getElementById('question-text').textContent = question.question;
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                if (testState.answers[testState.currentQuestionIndex] === index) {
+                    optionElement.classList.add('selected');
+                }
+
+                optionElement.innerHTML = `
+                            <input type="radio" name="option" id="option-${index}" value="${index}" 
+                                   ${testState.answers[testState.currentQuestionIndex] === index ? 'checked' : ''}>
+                            <label for="option-${index}">${option.text}</label>
+                        `;
+
+                optionElement.addEventListener('click', () => selectOption(index));
+                optionsContainer.appendChild(optionElement);
+            });
+
+            const totalQuestions = questions.length;
+            const isFirstQuestion = testState.currentQuestionIndex === 0;
+            const isLastQuestion = testState.currentQuestionIndex === totalQuestions - 1;
+
+            document.getElementById('prev-btn').style.display = isFirstQuestion ? 'none' : 'flex';
+            document.getElementById('submit-btn').style.display = isLastQuestion ? 'flex' : 'none';
+        }
+
+        // 选择选项
+        function selectOption(optionIndex) {
+            testState.answers[testState.currentQuestionIndex] = optionIndex;
+
+            document.querySelectorAll('.option').forEach((option, index) => {
+                if (index === optionIndex) {
+                    option.classList.add('selected');
+                    option.querySelector('input').checked = true;
+                } else {
+                    option.classList.remove('selected');
+                    option.querySelector('input').checked = false;
+                }
+            });
+
+            const questions = testState.currentTestType === 'self' ? selfTestQuestions : partnerTestQuestions;
+            const isLastQuestion = testState.currentQuestionIndex === questions.length - 1;
+
+            const notice = document.getElementById('auto-jump-notice');
+
+            if (!isLastQuestion) {
+                notice.style.display = 'block';
+                testState.autoJumpTimer = setTimeout(() => {
+                    nextQuestion();
+                }, 500);
+            }
+        }
+
+        // 下一题
+        function nextQuestion() {
+            const questions = testState.currentTestType === 'self' ? selfTestQuestions : partnerTestQuestions;
+
+            if (testState.currentQuestionIndex < questions.length - 1) {
+                testState.currentQuestionIndex++;
+                displayQuestion();
+            }
+        }
+
+        // 上一题
+        function prevQuestion() {
+            if (testState.currentQuestionIndex > 0) {
+                testState.currentQuestionIndex--;
+                displayQuestion();
+            }
+        }
+
+        // 提交测试
+        function submitTest() {
+            calculateScores();
+            showPage('result-page');
+        }
+
+        // 计算分数
+        function calculateScores() {
+            const questions = testState.currentTestType === 'self' ? selfTestQuestions : partnerTestQuestions;
+
+            for (let dimension in testState.dimensionScores) {
+                testState.dimensionScores[dimension] = 0;
+            }
+
+            questions.forEach((question, index) => {
+                const answerIndex = testState.answers[index];
+                if (answerIndex !== undefined) {
+                    const score = question.options[answerIndex].score;
+                    testState.dimensionScores[question.dimension] += score;
+                }
+            });
+        }
+
+        // 获取维度详细解读
+        function getDimensionDetail(dimensionName, score) {
+            let level;
+            if (score <= 7) level = "low";
+            else if (score <= 13) level = "mid";
+            else level = "high";
+
+            return dimensionDetails[dimensionName] ? dimensionDetails[dimensionName][level] : null;
+        }
+
+        // 生成结果
+        function generateResults() {
+            let totalScore = 0;
+            for (let dimension in testState.dimensionScores) {
+                totalScore += testState.dimensionScores[dimension];
+            }
+
+            document.getElementById('total-score').textContent = totalScore;
+
+            let category, summary;
+            if (totalScore < 40) {
+                category = "低占有欲";
+                summary = "您在恋爱关系中表现出较低的占有欲，倾向于给予伴侣较大的自由和空间。这种模式有助于关系保持轻松氛围，但需要注意是否可能让伴侣感到被忽视。";
+            } else if (totalScore < 80) {
+                category = "中度占有欲";
+                summary = "您在恋爱关系中表现出适度的占有欲，这属于正常范围。您渴望亲密连接，但也能给予伴侣一定的个人空间，这种平衡有助于关系健康发展。";
+            } else {
+                category = "高占有欲";
+                summary = "您在恋爱关系中表现出较高的占有欲，可能对伴侣的个人空间和自由限制较多。这可能导致关系紧张，需要适当调整以建立更健康的互动模式。";
+            }
+
+            document.getElementById('result-category').textContent = category;
+            document.getElementById('result-summary').textContent = summary;
+
+            const container = document.getElementById('dimension-results-container');
+            container.innerHTML =
+                '<h3 class="card-title"><i class="fas fa-chart-bar"></i> 各维度详细分析</h3><div class="dimension-results" id="dimension-results"></div>';
+
+            const dimensionContainer = document.getElementById('dimension-results');
+
+            dimensions.forEach(dimension => {
+                const score = testState.dimensionScores[dimension.name];
+                const percentage = Math.min(100, (score / dimension.maxScore) * 100);
+
+                const detail = getDimensionDetail(dimension.name, score);
+
+                const dimensionCard = document.createElement('div');
+                dimensionCard.className = 'dimension-card';
+                dimensionCard.innerHTML = `
+                            <div class="dimension-title">${dimension.name}</div>
+                            <div class="dimension-score">${score}<span>/${dimension.maxScore}</span></div>
+                            <div class="dimension-bar">
+                                <div class="dimension-fill" style="width: ${percentage}%"></div>
+                            </div>
+                            <div style="margin-top: 10px; font-size: 0.9rem;">
+                                <div><strong>水平:</strong> ${detail ? detail.title : '--'}</div>
+                                <div><strong>范围:</strong> ${detail ? detail.range : '--'}</div>
+                            </div>
+                            <p style="margin-top: 10px; font-size: 0.85rem; color: #666; line-height: 1.4;">
+                                ${detail ? detail.description : dimension.description}
+                            </p>
+                        `;
+
+                dimensionContainer.appendChild(dimensionCard);
+            });
+
+            generateActionGuide(totalScore, category);
+        }
+
+        // 生成行动指南
+        function generateActionGuide(totalScore, category) {
+            const guideContainer = document.getElementById('action-guide-content');
+
+            let guideHTML = '';
+
+            if (category === "低占有欲") {
+                guideHTML = `
+                            <p>您的占有欲水平较低，这可能意味着您在关系中较为独立，给予伴侣较大的自由空间。以下建议可能对您有帮助：</p>
+                            <ul class="action-list">
+                                <li><strong>表达需求：</strong>虽然您不要求很多，但适当地表达您的需求和期望有助于伴侣更好地理解您</li>
+                                <li><strong>适度关注：</strong>偶尔表达对伴侣的关注和在意，可以增强关系的亲密感</li>
+                                <li><strong>建立仪式感：</strong>创造一些属于两人的特别时刻，增强关系的专属感</li>
+                                <li><strong>沟通平衡：</strong>与伴侣讨论你们各自对独立空间和亲密连接的需求，找到双方都舒适的平衡点</li>
+                            </ul>
+                            <p>记住，健康的亲密关系需要适度的依赖和连接，完全独立可能让伴侣感到疏远。</p>
+                        `;
+            } else if (category === "中度占有欲") {
+                guideHTML = `
+                            <p>您的占有欲处于健康范围，既重视亲密连接，也尊重个人空间。以下建议可以帮助您维持这种平衡：</p>
+                            <ul class="action-list">
+                                <li><strong>保持现状：</strong>您目前的平衡状态很理想，继续保持这种健康的互动模式</li>
+                                <li><strong>定期沟通：</strong>与伴侣定期讨论关系中的感受和需求，预防潜在问题</li>
+                                <li><strong>培养共同兴趣：</strong>发展一些共同的兴趣爱好，增强关系的连接质量</li>
+                                <li><strong>尊重差异：</strong>接受伴侣可能与您有不同的社交需求和空间需求</li>
+                                <li><strong>自我觉察：</strong>留意自己的情绪变化，当感到不安时尝试理解原因而非立即反应</li>
+                            </ul>
+                            <p>您的关系模式很健康，继续保持开放沟通和相互尊重是关键。</p>
+                        `;
+            } else {
+                guideHTML = `
+                            <p>您的占有欲水平较高，这可能给关系带来压力。以下建议可以帮助您调整关系模式：</p>
+                            <ul class="action-list">
+                                <li><strong>自我反思：</strong>思考高占有欲背后的原因，是安全感不足、过往经历还是其他因素</li>
+                                <li><strong>逐步放手：</strong>从小事开始练习给予伴侣更多空间，如不追问每次外出的细节</li>
+                                <li><strong>建立自信：</strong>培养个人兴趣和社交圈，减少对伴侣的情感依赖</li>
+                                <li><strong>信任练习：</strong>有意识地练习信任伴侣，避免不必要的监控和猜疑</li>
+                                <li><strong>专业帮助：</strong>如果占有欲严重影响了关系，考虑寻求心理咨询师的帮助</li>
+                                <li><strong>开放对话：</strong>与伴侣坦诚讨论您的感受，共同寻找解决方案</li>
+                            </ul>
+                            <p>改变需要时间和耐心，小的调整可以带来关系的显著改善。</p>
+                        `;
+            }
+
+            const highDimension = Object.entries(testState.dimensionScores).reduce((a, b) => a[1] > b[1] ? a : b);
+            if (highDimension[1] > 12) {
+                guideHTML += `
+                            <div style="margin-top: 20px; padding: 15px; background-color: rgba(255, 107, 139, 0.05); border-radius: 8px;">
+                                <h4><i class="fas fa-exclamation-circle"></i> 重点关注：${highDimension[0]}</h4>
+                                <p>您在<strong>${highDimension[0]}</strong>维度得分较高，可能需要特别关注：</p>
+                                <ul class="action-list">
+                                    ${getDimensionSpecificAdvice(highDimension[0])}
+                                </ul>
+                            </div>
+                        `;
+            }
+
+            guideContainer.innerHTML = guideHTML;
+        }
+
+        // 获取维度特定建议
+        function getDimensionSpecificAdvice(dimensionName) {
+            const adviceMap = {
+                "情感独占度": [
+                    "接受伴侣可以有其他重要的情感支持来源",
+                    "区分'亲密'和'独占'，爱情不是零和游戏",
+                    "拓展自己的支持网络，分散情感焦点"
+                ],
+                "社交监控度": [
+                    "减少对伴侣社交活动的监控行为",
+                    "信任是关系的基础，监控只会损害信任",
+                    "与伴侣共同建立基于自愿的透明度协议"
+                ],
+                "决策干涉度": [
+                    "区分'关心'与'控制'，尊重伴侣的自主权",
+                    "在提供意见前先询问伴侣是否需要",
+                    "练习在小事上放手，重建对伴侣判断力的信任"
+                ],
+                "时间与空间支配度": [
+                    "接受伴侣需要个人时间和空间",
+                    "安排'强制性分离时间'，逐步适应独立",
+                    "探索对'独处即抛弃'的恐惧根源"
+                ],
+                "焦虑与猜疑倾向": [
+                    "练习正念和 grounding 技术，在焦虑袭来时稳住自己",
+                    "区分'想法'和'事实'，减少灾难化想象",
+                    "考虑寻求心理咨询，探索焦虑的深层原因"
+                ],
+                "所有权宣示度": [
+                    "将能量从'对外宣示'转向'对内建设'",
+                    "反思宣示行为是为了安全感还是庆祝爱",
+                    "通过深入的沟通和支持强化专属联结"
+                ]
+            };
+
+            return adviceMap[dimensionName] ?
+                adviceMap[dimensionName].map(item => `<li>${item}</li>`).join('') :
+                `<li>关注此维度的具体表现，与伴侣开放讨论</li>`;
+        }
+
+        // 返回首页
+        function goHome() {
+            showPage('home-page');
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            showPage('home-page');
+        });
+    </script>
+</body>
+</html>
